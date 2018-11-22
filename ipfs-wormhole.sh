@@ -4,6 +4,9 @@ IFS=$'\n\t'
 
 # See <https://raw.githubusercontent.com/aurelg/ipfs-wormhole/master/README.md>
 
+if [ -z "${IWPASSWORDLENGTH-}" ]; then
+  IWPASSWORDLENGTH=40
+fi
 if [ -z "${IWIPFSGATEWAY-}" ]; then
   IWIPFSGATEWAY=https://cloudflare-ipfs.com/ipfs
 fi
@@ -35,7 +38,7 @@ send)
   TARCMD="$(checkdep tar)"
   GPGCMD="$(checkdep gpg)"
   IPFSCMD="$(checkdep ipfs)"
-  PASSWORD=$(generate_password)
+  PASSWORD="$(generate_password "${IWPASSWORDLENGTH}")"
 
   # Handle user input
   USERINPUT=${2:-}
