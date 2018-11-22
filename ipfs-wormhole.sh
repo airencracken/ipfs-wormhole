@@ -4,9 +4,6 @@ IFS=$'\n\t'
 
 # See <https://raw.githubusercontent.com/aurelg/ipfs-wormhole/master/README.md>
 
-if [ -z "${IWPASSWORDLENGTH-}" ]; then
-  IWPASSWORDLENGTH=40
-fi
 if [ -z "${IWIPFSGATEWAY-}" ]; then
   IWIPFSGATEWAY=https://cloudflare-ipfs.com/ipfs
 fi
@@ -24,16 +21,21 @@ function checkdep() {
   echo "$CMDPATH"
 }
 
+# Generate Passwords, the default length is 40 characters
+
+function generate_password() {
+  < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-40}
+}
+
 case "${1:-}" in
 
 send)
 
   # Get path to deps
-  PWGENCMD="$(checkdep pwgen)"
   TARCMD="$(checkdep tar)"
   GPGCMD="$(checkdep gpg)"
   IPFSCMD="$(checkdep ipfs)"
-  PASSWORD=$($PWGENCMD -1 $IWPASSWORDLENGTH)
+  PASSWORD=$(generate_password)
 
   # Handle user input
   USERINPUT=${2:-}
@@ -142,7 +144,6 @@ receive)
 
 checkdeps)
   # Check if all dependencies are installed
-  PWGENCMD="$(checkdep pwgen)"
   TARCMD="$(checkdep tar)"
   GPGCMD="$(checkdep gpg)"
   IPFSCMD="$(checkdep ipfs)"
