@@ -27,7 +27,8 @@ function checkdep() {
 # Generate Passwords, the default length is 40 characters
 
 function generate_password() {
-  < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-40}
+  local temp_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-40})
+  echo $temp_password
 }
 
 case "${1:-}" in
